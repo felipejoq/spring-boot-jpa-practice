@@ -20,7 +20,6 @@ public class ClienteDaoImpl implements IClienteDao {
 	@Transactional(readOnly = true)
 	@Override
 	public List<Cliente> findAll() {
-
 		return em.createQuery("from Cliente").getResultList();
 	}
 
@@ -32,13 +31,19 @@ public class ClienteDaoImpl implements IClienteDao {
 		} else {
 			em.persist(cliente);
 		}
-
+	}
+	
+	@Override
+	@Transactional
+	public void delete(Long id) {
+		em.remove(this.findOne(id));
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public Cliente findOne(Long id) {
-
 		return em.find(Cliente.class, id);
 	}
+
 
 }
