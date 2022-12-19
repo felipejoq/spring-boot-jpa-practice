@@ -13,54 +13,54 @@
 </head>
 <body>
 
-	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-		<div class="container">
-			<a class="navbar-brand" href="#">Spring Boot</a>
-			<button class="navbar-toggler" type="button"
-				data-bs-toggle="collapse" data-bs-target="#navbarNav"
-				aria-controls="navbarNav" aria-expanded="false"
-				aria-label="Toggle navigation">
-				<span class="navbar-toggler-icon"></span>
-			</button>
-			<div class="collapse navbar-collapse" id="navbarNav">
-				<ul class="navbar-nav">
-					<li class="nav-item"><a class="nav-link active"
-						aria-current="page" th:href="@{/}">Home</a></li>
-					<li class="nav-item"><a class="nav-link" th:href="@{/listar}">Clientes</a></li>
-					<li class="nav-item"><a class="nav-link" th:href="@{/form}">Crear</a></li>
-				</ul>
-			</div>
-		</div>
-	</nav>
+	<header th:replace="~{fragments/navbartop :: header}"></header>
 
-
-	<div class="container">
+	<div class="container mt-3">
 		<h1
 			class="text-primary border border-primary border-4 border-start-0 border-end-0 border-top-0"
 			th:text="${titulo}"></h1>
 
-		<form th:action="@{/form}" th:object="${cliente}" method="POST" class="col-md-4">
+		<div th:object="${cliente}">
+			<ul th:if="${#fields.hasErrors('*')}" class="list-group mt-4">
+				<li class="list-group-item text-danger" th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+			</ul>
+		</div>
+
+		<form th:action="@{/form}" th:object="${cliente}" method="POST"
+			class="col-md-4 mt-4">
 
 			<div class="mb-3">
-				<label class="form-label" for="nombre">Nombre:</label>
-				<input type="text" th:field="*{nombre}" id="nombre" class="form-control" />
+				<label class="form-label" for="nombre">Nombre:</label> <input
+					type="text" th:field="*{nombre}" id="nombre" class="form-control"
+					th:errorclass="'form-control is-invalid'" />
+				<div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}"
+					th:errors="*{nombre}"></div>
 			</div>
-			
+
 			<div class="mb-3">
-				<label class="form-label" for="apellido">Apellido:</label>
-				<input type="text" th:field="*{apellido}" id="apellido" class="form-control" />
+				<label class="form-label" for="apellido">Apellido:</label> <input
+					type="text" th:field="*{apellido}" id="apellido"
+					class="form-control" th:errorclass="'form-control is-invalid'" />
+				<div class="invalid-feedback"
+					th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
 			</div>
-			
+
 			<div class="mb-3">
-				<label class="form-label" for="email">Email:</label>
-				<input type="email" th:field="*{email}" id="email" class="form-control" />
+				<label class="form-label" for="email">Email:</label> <input
+					type="email" th:field="*{email}" id="email" class="form-control"
+					th:errorclass="'form-control is-invalid'" />
+				<div class="invalid-feedback" th:if="${#fields.hasErrors('email')}"
+					th:errors="*{email}"></div>
 			</div>
-			
+
 			<div class="mb-3">
-				<label class="form-label" for="fecha">Fecha:</label>
-				<input type="date" th:field="*{createAt}" id="fecha" class="form-control" />
+				<label class="form-label" for="fecha">Fecha:</label> <input
+					type="date" th:field="*{createAt}" id="fecha" class="form-control"
+					th:errorclass="'form-control is-invalid'" />
+				<div class="invalid-feedback"
+					th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></div>
 			</div>
-			
+
 			<div>
 				<button class="btn btn-primary" type="submit">Guardar</button>
 				<input type="hidden" th:field="*{id}" />
