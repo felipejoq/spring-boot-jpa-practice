@@ -22,7 +22,7 @@
 
 		<div th:object="${cliente}">
 			<ul th:if="${#fields.hasErrors('*')}" class="list-group mt-4">
-				<li class="list-group-item text-danger" th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+				<li class="list-group-item list-group-item-warning" th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
 			</ul>
 		</div>
 
