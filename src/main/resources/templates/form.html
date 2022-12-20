@@ -1,78 +1,77 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.com">
-<head>
-<meta charset="UTF-8" />
-<title th:text="${titulo}"></title>
-
-<!-- CSS only -->
-<link
-	href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
-	rel="stylesheet"
-	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
-	crossorigin="anonymous">
-</head>
+<head th:replace="~{fragments/layout :: head}"></head>
 <body>
 
-	<header th:replace="~{fragments/navbartop :: header}"></header>
+	<header th:replace="~{fragments/layout :: header}"></header>
 
 	<div class="container mt-3">
-		<h1
-			class="text-primary border border-primary border-4 border-start-0 border-end-0 border-top-0"
-			th:text="${titulo}"></h1>
 
-		<div th:object="${cliente}">
-			<ul th:if="${#fields.hasErrors('*')}" class="list-group mt-4">
-				<li class="list-group-item list-group-item-warning" th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
-			</ul>
+		<div class="card bg-light">
+
+			<div class="card-header" th:text="${titulo}"></div>
+			
+			<div class="card-body">
+
+
+				<div th:object="${cliente}">
+					<ul th:if="${#fields.hasErrors('*')}" class="list-group mt-4">
+						<li class="list-group-item list-group-item-warning"
+							th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+					</ul>
+				</div>
+
+				<form th:action="@{/form}" th:object="${cliente}" method="POST"
+					class="col-md-4">
+
+					<div class="mb-3">
+						<label class="form-label" for="nombre">Nombre:</label> <input
+							type="text" th:field="*{nombre}" id="nombre" class="form-control"
+							th:errorclass="'form-control is-invalid'" />
+						<div class="invalid-feedback"
+							th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label" for="apellido">Apellido:</label> <input
+							type="text" th:field="*{apellido}" id="apellido"
+							class="form-control" th:errorclass="'form-control is-invalid'" />
+						<div class="invalid-feedback"
+							th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label" for="email">Email:</label> <input
+							type="email" th:field="*{email}" id="email" class="form-control"
+							th:errorclass="'form-control is-invalid'" />
+						<div class="invalid-feedback"
+							th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+					</div>
+
+					<div class="mb-3">
+						<label class="form-label" for="fecha">Fecha:</label> <input
+							type="date" th:field="*{createAt}" id="fecha"
+							class="form-control" th:errorclass="'form-control is-invalid'" />
+						<div class="invalid-feedback"
+							th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></div>
+					</div>
+
+					<div>
+						<button class="btn btn-primary" type="submit">Guardar</button>
+
+					</div>
+
+				</form>
+
+			</div>
+
 		</div>
 
-		<form th:action="@{/form}" th:object="${cliente}" method="POST"
-			class="col-md-4 mt-4">
 
-			<div class="mb-3">
-				<label class="form-label" for="nombre">Nombre:</label> <input
-					type="text" th:field="*{nombre}" id="nombre" class="form-control"
-					th:errorclass="'form-control is-invalid'" />
-				<div class="invalid-feedback" th:if="${#fields.hasErrors('nombre')}"
-					th:errors="*{nombre}"></div>
-			</div>
-
-			<div class="mb-3">
-				<label class="form-label" for="apellido">Apellido:</label> <input
-					type="text" th:field="*{apellido}" id="apellido"
-					class="form-control" th:errorclass="'form-control is-invalid'" />
-				<div class="invalid-feedback"
-					th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
-			</div>
-
-			<div class="mb-3">
-				<label class="form-label" for="email">Email:</label> <input
-					type="email" th:field="*{email}" id="email" class="form-control"
-					th:errorclass="'form-control is-invalid'" />
-				<div class="invalid-feedback" th:if="${#fields.hasErrors('email')}"
-					th:errors="*{email}"></div>
-			</div>
-
-			<div class="mb-3">
-				<label class="form-label" for="fecha">Fecha:</label> <input
-					type="date" th:field="*{createAt}" id="fecha" class="form-control"
-					th:errorclass="'form-control is-invalid'" />
-				<div class="invalid-feedback"
-					th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></div>
-			</div>
-
-			<div>
-				<button class="btn btn-primary" type="submit">Guardar</button>
-				
-			</div>
-
-		</form>
 
 	</div>
-	<!-- JavaScript Bundle with Popper -->
-	<script
-		src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-		integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-		crossorigin="anonymous"></script>
+
+	<footer th:replace="~{fragments/layout :: footer}"></footer>
+
 </body>
 </html>
