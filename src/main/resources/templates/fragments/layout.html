@@ -11,6 +11,7 @@
 	rel="stylesheet"
 	integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
 	crossorigin="anonymous">
+	
 </head>
 
 <body>
@@ -35,9 +36,24 @@
 		</nav>
 	</header>
 
+	<section th:fragment="messages">
+
+		<div class="alert alert-success" th:if="${success != null}"
+			th:text="${success}"></div>
+		<div class="alert alert-danger" th:if="${error != null}"
+			th:text="${error}"></div>
+		<div class="alert alert-warning" th:if="${warning != null}"
+			th:text="${warning}"></div>
+		<div class="alert alert-info" th:if="${info != null}"
+			th:text="${info}"></div>
+
+	</section>
+
+	<div class="container"></div>
+
 	<footer th:fragment="footer">
 		<div class="container mt-4">
-			<hr class="border border-success border-3 opacity-75">
+			<hr class="border border-success border-1 opacity-100">
 			<div class="text-center">
 				<img width="200" alt="" th:src="@{img/spring-boot-logo.png}">
 				<div class="mt-4">
@@ -54,6 +70,10 @@
 				integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
 				crossorigin="anonymous"></script>
 		</div>
+		
+		<script th:src="@{/js/main.script.js}" defer></script>
+		
+		
 	</footer>
 
 </body>
