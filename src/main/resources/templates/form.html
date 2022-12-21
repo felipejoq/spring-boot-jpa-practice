@@ -22,7 +22,7 @@
 				</div>
 
 				<form th:action="@{/form}" th:object="${cliente}" method="POST"
-					class="col-md-4">
+					class="col-md-4" enctype="multipart/form-data">
 
 					<div class="mb-3">
 						<label class="form-label" for="nombre">Nombre:</label> <input
@@ -54,6 +54,11 @@
 							class="form-control" th:errorclass="'form-control is-invalid'" />
 						<div class="invalid-feedback"
 							th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></div>
+					</div>
+					
+					<div class="mb-3">
+						<label class="form-label" for="file">Imagen:</label>
+						<input type="file" name="file" id="file" class="form-control"/>
 					</div>
 
 					<div>

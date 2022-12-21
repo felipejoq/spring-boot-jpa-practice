@@ -8,12 +8,11 @@ import org.springframework.data.domain.Page;
 public class PageRender<T> {
 
 	private String url;
-
 	private Page<T> page;
 
 	private int totalPaginas;
 
-	private int numeroElementosPorPagina;
+	private int numElementosPorPagina;
 
 	private int paginaActual;
 
@@ -24,31 +23,29 @@ public class PageRender<T> {
 		this.page = page;
 		this.paginas = new ArrayList<PageItem>();
 
-		this.numeroElementosPorPagina = page.getSize();
-
-		this.totalPaginas = page.getTotalPages();
-
-		this.paginaActual = page.getNumber() + 1;
+		numElementosPorPagina = 6;
+		totalPaginas = page.getTotalPages();
+		paginaActual = page.getNumber() + 1;
 
 		int desde, hasta;
-		if (totalPaginas <= numeroElementosPorPagina) {
+		if (totalPaginas <= numElementosPorPagina) {
 			desde = 1;
 			hasta = totalPaginas;
 		} else {
-			if (paginaActual <= numeroElementosPorPagina / 2) {
+			if (paginaActual <= numElementosPorPagina / 2) {
 				desde = 1;
-				hasta = numeroElementosPorPagina;
-			} else if (paginaActual >= totalPaginas - numeroElementosPorPagina / 2) {
-				desde = totalPaginas - numeroElementosPorPagina + 1;
-				hasta = numeroElementosPorPagina;
+				hasta = numElementosPorPagina;
+			} else if (paginaActual >= totalPaginas - numElementosPorPagina / 2) {
+				desde = totalPaginas - numElementosPorPagina + 1;
+				hasta = numElementosPorPagina;
 			} else {
-				desde = paginaActual - numeroElementosPorPagina / 2;
-				hasta = numeroElementosPorPagina;
+				desde = paginaActual - numElementosPorPagina / 2;
+				hasta = numElementosPorPagina;
 			}
 		}
 
 		for (int i = 0; i < hasta; i++) {
-			paginas.add(new PageItem(desde + i, paginaActual == desde + 1));
+			paginas.add(new PageItem(desde + i, paginaActual == desde + i));
 		}
 
 	}
@@ -57,49 +54,32 @@ public class PageRender<T> {
 		return url;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
 	public int getTotalPaginas() {
 		return totalPaginas;
-	}
-
-	public void setTotalPaginas(int totalPaginas) {
-		this.totalPaginas = totalPaginas;
 	}
 
 	public int getPaginaActual() {
 		return paginaActual;
 	}
 
-	public void setPaginaActual(int paginaActual) {
-		this.paginaActual = paginaActual;
-	}
-
 	public List<PageItem> getPaginas() {
 		return paginas;
 	}
 
-	public void setPaginas(List<PageItem> paginas) {
-		this.paginas = paginas;
-	}
-	
 	public boolean isFirst() {
 		return page.isFirst();
 	}
-	
+
 	public boolean isLast() {
 		return page.isLast();
 	}
-	
+
 	public boolean isHasNext() {
 		return page.hasNext();
 	}
-	
+
 	public boolean isHasPrevious() {
 		return page.hasPrevious();
 	}
-	
 
 }
