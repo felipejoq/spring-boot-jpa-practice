@@ -1,18 +1,29 @@
 package com.uncodigo.springboot.app;
 
+// import java.nio.file.Paths;
+
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+// import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class MvcConfig implements WebMvcConfigurer {
 
-	@Override
-	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		WebMvcConfigurer.super.addResourceHandlers(registry);
-		
-		registry.addResourceHandler("/uploads/**").addResourceLocations("file:/Users/felipe/Desktop/uploads/");
-		
-	}
+//    private final Logger logger = LoggerFactory.getLogger(getClass()); 
+
+	
+//	@Override
+//	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+//		WebMvcConfigurer.super.addResourceHandlers(registry);
+//		
+//		String directorioRecursos = Paths.get("uploads").toAbsolutePath().toUri().toString();
+//		
+//		logger.info("directorioRecursos: " + directorioRecursos);
+//		
+//		registry.addResourceHandler("/uploads/**").addResourceLocations(directorioRecursos);
+//		
+//	}
 
 }

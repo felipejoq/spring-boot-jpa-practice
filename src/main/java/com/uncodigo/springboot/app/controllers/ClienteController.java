@@ -1,16 +1,17 @@
 package com.uncodigo.springboot.app.controllers;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.net.MalformedURLException;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.uncodigo.springboot.app.models.entity.Cliente;
 import com.uncodigo.springboot.app.models.service.IClienteService;
+import com.uncodigo.springboot.app.models.service.IUploadFileService;
 import com.uncodigo.springboot.app.util.paginator.PageRender;
 
 import jakarta.validation.Valid;
@@ -35,8 +37,26 @@ import jakarta.validation.Valid;
 public class ClienteController {
 
 	@Autowired
+	private IUploadFileService uploadFileService;
+
+	@Autowired
 	@Qualifier("clienteService")
 	private IClienteService clienteService;
+
+	@GetMapping(value = "/uploads/{filename:.+}")
+	public ResponseEntity<Resource> verFoto(@PathVariable String filename) {
+
+		Resource recurso = null;
+		try {
+			recurso = uploadFileService.load(filename);
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment: filename=\"" + recurso.getFilename() + "\"")
+				.body(recurso);
+	}
 
 	@RequestMapping(value = "/listar", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
@@ -78,23 +98,25 @@ public class ClienteController {
 
 		if (!foto.isEmpty()) {
 
-			String rootPath = "/Users/felipe/Desktop/uploads";
+			if (cliente.getId() != null && cliente.getId() > 0 && cliente.getFoto() != null
+					&& cliente.getFoto().length() > 0) {
+
+				uploadFileService.delete(cliente.getFoto());
+
+			}
+
+			String nomUnico = null;
 
 			try {
-
-				byte[] bytes = foto.getBytes();
-
-				Path rutaCompleta = Paths.get(rootPath + "//" + foto.getOriginalFilename());
-
-				Files.write(rutaCompleta, bytes);
-
-				cliente.setFoto(foto.getOriginalFilename());
-
-				flash.addFlashAttribute("info", "La imagen se subió correctamente: " + foto.getOriginalFilename());
-
+				nomUnico = uploadFileService.copy(foto);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+
+			cliente.setFoto(nomUnico);
+
+			flash.addFlashAttribute("info", "La imagen se subió correctamente: " + nomUnico);
+
 		}
 
 		String mensajeFlash = (cliente.getId() != null) ? "El cliente ha sido EDITADO con éxito!"
@@ -139,9 +161,17 @@ public class ClienteController {
 	public String eliminar(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 
 		if (id > 0) {
+
+			Cliente cliente = clienteService.findOne(id);
+
 			clienteService.delete(id);
+			flash.addFlashAttribute("info", "El cliente ha sido elimiando con éxito!");
+
+			if (uploadFileService.delete(cliente.getFoto())) {
+				flash.addFlashAttribute("info", "Foto: " + cliente.getFoto() + " Eliminada con éxito!");
+			}
+
 		}
-		flash.addFlashAttribute("info", "El cliente ha sido elimiando con éxito!");
 
 		return "redirect:/listar";
 	}
@@ -155,7 +185,7 @@ public class ClienteController {
 			flash.addFlashAttribute("error", "El cliente no existe en la base de datos");
 			return "redirect:/listar";
 		}
-		
+
 		model.put("cliente", cliente);
 		model.put("titulo", "Detalles del cliente: " + cliente.getNombre());
 
