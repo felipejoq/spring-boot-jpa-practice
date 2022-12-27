@@ -3,80 +3,81 @@
 <head th:replace="~{fragments/layout :: head}"></head>
 <body>
 
-	<header th:replace="~{fragments/layout :: header}"></header>
+<header th:replace="~{fragments/layout :: header}"></header>
 
-	<div class="container mt-3">
+<div class="container mt-3">
 
-		<div class="card bg-light">
+	<section th:replace="~{fragments/layout :: messages}"></section>
 
-			<div class="card-header" th:text="${titulo}"></div>
-			
-			<div class="card-body">
+	<div class="card bg-light">
+
+		<div class="card-header" th:text="${titulo}"></div>
+
+		<div class="card-body">
 
 
-				<div th:object="${cliente}">
-					<ul th:if="${#fields.hasErrors('*')}" class="list-group mt-4">
-						<li class="list-group-item list-group-item-warning"
-							th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
-					</ul>
+			<div th:object="${cliente}">
+				<ul th:if="${#fields.hasErrors('*')}" class="list-group mt-4">
+					<li class="list-group-item list-group-item-warning"
+						th:each="err: ${#fields.errors('*')}" th:text="${err}"></li>
+				</ul>
+			</div>
+
+			<form th:action="@{/form}" th:object="${cliente}" method="POST"
+				  class="col-md-4" enctype="multipart/form-data">
+
+				<div class="mb-3">
+					<label class="form-label" for="nombre">Nombre:</label> <input
+						type="text" th:field="*{nombre}" id="nombre" class="form-control"
+						th:errorclass="'form-control is-invalid'"/>
+					<div class="invalid-feedback"
+						 th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
 				</div>
 
-				<form th:action="@{/form}" th:object="${cliente}" method="POST"
-					class="col-md-4" enctype="multipart/form-data">
+				<div class="mb-3">
+					<label class="form-label" for="apellido">Apellido:</label> <input
+						type="text" th:field="*{apellido}" id="apellido"
+						class="form-control" th:errorclass="'form-control is-invalid'"/>
+					<div class="invalid-feedback"
+						 th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
+				</div>
 
-					<div class="mb-3">
-						<label class="form-label" for="nombre">Nombre:</label> <input
-							type="text" th:field="*{nombre}" id="nombre" class="form-control"
-							th:errorclass="'form-control is-invalid'" />
-						<div class="invalid-feedback"
-							th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></div>
-					</div>
+				<div class="mb-3">
+					<label class="form-label" for="email">Email:</label> <input
+						type="email" th:field="*{email}" id="email" class="form-control"
+						th:errorclass="'form-control is-invalid'"/>
+					<div class="invalid-feedback"
+						 th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+				</div>
 
-					<div class="mb-3">
-						<label class="form-label" for="apellido">Apellido:</label> <input
-							type="text" th:field="*{apellido}" id="apellido"
-							class="form-control" th:errorclass="'form-control is-invalid'" />
-						<div class="invalid-feedback"
-							th:if="${#fields.hasErrors('apellido')}" th:errors="*{apellido}"></div>
-					</div>
+				<div class="mb-3">
+					<label class="form-label" for="fecha">Fecha:</label> <input
+						type="date" th:field="*{createAt}" id="fecha"
+						class="form-control" th:errorclass="'form-control is-invalid'"/>
+					<div class="invalid-feedback"
+						 th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></div>
+				</div>
 
-					<div class="mb-3">
-						<label class="form-label" for="email">Email:</label> <input
-							type="email" th:field="*{email}" id="email" class="form-control"
-							th:errorclass="'form-control is-invalid'" />
-						<div class="invalid-feedback"
-							th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
-					</div>
+				<div class="mb-3">
+					<label class="form-label" for="file">Imagen:</label>
+					<input type="file" name="file" id="file" class="form-control"/>
+				</div>
 
-					<div class="mb-3">
-						<label class="form-label" for="fecha">Fecha:</label> <input
-							type="date" th:field="*{createAt}" id="fecha"
-							class="form-control" th:errorclass="'form-control is-invalid'" />
-						<div class="invalid-feedback"
-							th:if="${#fields.hasErrors('createAt')}" th:errors="*{createAt}"></div>
-					</div>
-					
-					<div class="mb-3">
-						<label class="form-label" for="file">Imagen:</label>
-						<input type="file" name="file" id="file" class="form-control"/>
-					</div>
+				<div>
+					<button class="btn btn-primary" type="submit">Guardar</button>
 
-					<div>
-						<button class="btn btn-primary" type="submit">Guardar</button>
+				</div>
 
-					</div>
-
-				</form>
-
-			</div>
+			</form>
 
 		</div>
 
-
-
 	</div>
 
-	<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</div>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
 
 </body>
 </html>

@@ -1,1 +1,1 @@
-const confirm_delete = () => confirm('are you sure?');
+const confirm_delete = () => confirm('¿CONFIRMA QUE DESEA ELIMINAR?');
