@@ -2,8 +2,12 @@ package com.uncodigo.springboot.app.controllers;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpServletRequest;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.Resource;
@@ -12,6 +16,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -35,6 +46,7 @@ import jakarta.validation.Valid;
 @Controller
 @SessionAttributes("cliente")
 public class ClienteController {
+    protected final Log logger = LogFactory.getLog(this.getClass());
 
     @Autowired
     private IUploadFileService uploadFileService;
@@ -58,8 +70,37 @@ public class ClienteController {
                 .body(recurso);
     }
 
-    @RequestMapping(value = "/listar", method = RequestMethod.GET)
-    public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+    @RequestMapping(value = {"/listar", "/"}, method = RequestMethod.GET)
+    public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model, Authentication authentication, HttpServletRequest request) {
+
+        /* Authentication puede ser obtenido de forma estática en cualquier parte de la aplicación de esta forma:
+         * Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+         */
+
+        if (authentication != null) {
+            // Aquí podemos hacer algo.
+            logger.info("Hola ".concat(authentication.getName()).concat(" usted está viendo la vista listar con login."));
+        }
+
+        if (hasRole("ROLE_ADMIN")) {
+            logger.info("Hola ".concat(authentication.getName()).concat(" tienes acceso."));
+        } else {
+            logger.info("No tienes acceso.");
+        }
+
+        SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+
+        if (securityContext.isUserInRole("ADMIN")) {
+            logger.info("Hola ".concat(authentication.getName()).concat(" Eres admin."));
+        } else {
+            logger.info("Hola ".concat(authentication.getName()).concat(" No eres admin."));
+        }
+
+        if (request.isUserInRole("ROLE_ADMIN")) {
+            logger.info("Hola ".concat(authentication.getName()).concat(" HttpServletRequest Eres admin."));
+        } else {
+            logger.info("Hola ".concat(authentication.getName()).concat(" HttpServletRequest No eres admin."));
+        }
 
         Pageable pageRequest = PageRequest.of(page, 4);
 
@@ -131,6 +172,7 @@ public class ClienteController {
         return "redirect:listar";
     }
 
+
     @RequestMapping(value = "/form/{id}")
     public String editar(@PathVariable(value = "id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 
@@ -190,6 +232,35 @@ public class ClienteController {
         model.put("titulo", "Detalles del cliente: " + cliente.getNombre());
 
         return "ver";
+    }
+
+    private boolean hasRole(String role) {
+
+        SecurityContext context = SecurityContextHolder.getContext();
+
+        if (context == null) {
+            return false;
+        }
+
+        Authentication auth = context.getAuthentication();
+
+        if (auth == null) {
+            return false;
+        }
+
+        Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+
+        return authorities.contains(new SimpleGrantedAuthority(role));
+
+        /* for (GrantedAuthority authority : authorities) {
+            if (role.equals(authority.getAuthority())) {
+                logger.info("Hola ".concat(auth.getName()).concat(" tu rol es: ").concat(authority.getAuthority()));
+                return true;
+            }
+        }
+
+        return false; */
+
     }
 
 }
