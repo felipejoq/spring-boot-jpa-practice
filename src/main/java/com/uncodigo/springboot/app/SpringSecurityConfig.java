@@ -1,6 +1,7 @@
 package com.uncodigo.springboot.app;
 
 import com.uncodigo.springboot.app.auth.handler.LoginSuccessHandler;
+import com.uncodigo.springboot.app.models.service.JpaUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Bean;
@@ -9,10 +10,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 // import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetailsService;
+//import org.springframework.security.core.userdetails.User;
+//import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+//import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import javax.sql.DataSource;
@@ -24,11 +25,14 @@ public class SpringSecurityConfig {
     @Autowired
     LoginSuccessHandler successHandler;
 
-    @Autowired
-    private DataSource dataSource;
+/*    @Autowired
+    private DataSource dataSource;*/
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JpaUserDetailsService userDetailsService;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -59,11 +63,18 @@ public class SpringSecurityConfig {
 
     @Autowired
     public void configurerGlobal(AuthenticationManagerBuilder build) throws Exception {
-        build.jdbcAuthentication()
+
+        // Implementación con JPA
+        build.userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder);
+
+
+/* Implementación con JDBC
+  build.jdbcAuthentication()
                 .dataSource(dataSource)
                 .passwordEncoder(passwordEncoder)
                 .usersByUsernameQuery("select username, password, enabled from users where username=?")
-                .authoritiesByUsernameQuery("select u.username, a.authority from authorities a inner join users u on (a.user_id=u.id) where u.username=?");
+                .authoritiesByUsernameQuery("select u.username, a.authority from authorities a inner join users u on (a.user_id=u.id) where u.username=?");*/
     }
 
  /*    @Bean

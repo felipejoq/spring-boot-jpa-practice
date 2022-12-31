@@ -38,3 +38,11 @@ INSERT INTO facturas_items (cantidad, factura_id, producto_id) VALUES (3, 1, 4);
 
 INSERT INTO facturas (descripcion, observacion, cliente_id, create_at) VALUES ('Factura Escritorio', 'Es para la oficina de reuniones', 1, NOW());
 INSERT INTO facturas_items (cantidad, factura_id, producto_id) VALUES (3, 2, 3);
+
+/* Poblando usuarios y roles */
+INSERT INTO users (username, password, enabled) VALUES ('felipe', '$2a$10$36opVSgy4vKMPk1FFGf0wO6wM93cIXIgXJqkMprVqtQxuMbG8vqP6', 1);
+INSERT INTO users (username, password, enabled) VALUES ('admin', '$2a$10$4soRHrwRuwUDSjj25tdoruMgQlqxqgaKCiCYrJozFliJX5u.ARZZi', 1);
+
+INSERT INTO authorities (user_id, authority) VALUES (1, 'ROLE_USER');
+INSERT INTO authorities (user_id, authority) VALUES (2, 'ROLE_USER');
+INSERT INTO authorities (user_id, authority) VALUES (2, 'ROLE_ADMIN');

@@ -12,20 +12,28 @@ import java.security.Principal;
 public class LoginController {
 
     @GetMapping("/login")
-    public String login(@RequestParam(value = "error", required = false) String error, @RequestParam(value = "logout", required = false) String logout, Model model, Principal principal, RedirectAttributes flash) {
+    public String login(@RequestParam(value = "error", required = false) String error,
+                        @RequestParam(value = "logout", required = false) String logout,
+                        Model model, Principal principal,
+                        RedirectAttributes flash) {
 
         if (principal != null) {
             flash.addFlashAttribute("info", "Usted ya inició sesión.");
             return "redirect:/";
+        } else {
+            model.addAttribute("titulo", "Login - Aplicación");
         }
 
         if (error != null) {
+            model.addAttribute("titulo", "Error en el Login - Aplicación");
             model.addAttribute("error", "Credenciales incorrectas, inténtelo nuevamente.");
         }
 
         if (logout != null) {
+            model.addAttribute("titulo", "Desconectado con éxito - Aplicación");
             model.addAttribute("success", "Sesión cerrada con éxito.");
         }
+
 
         return "login";
     }
