@@ -11,13 +11,22 @@
 
     <div class="card bg-light">
 
-        <div class="card-header" th:text="${titulo}"></div>
+        <div class="card-header">
+
+            <span th:text="${titulo}"></span>
+
+        </div>
 
         <div class="card-body">
+            <div class="d-flex">
 
+                <div class="me-auto">
+                    <a class="mb-2 btn btn-dark btn-sm" th:href="@{/ver/} + ${factura.cliente.id}">&laquo; Volver</a>
+                </div>
+                <div class="ms-auto">
+                    <a class="btn btn-danger btn-sm" th:href="@{'/factura/ver/'+ ${factura.id}(format=pdf)}">PDF</a>
+                </div>
 
-            <div class="btn-group">
-                <a class="mb-2 btn btn-dark btn-sm" th:href="@{/ver/} + ${factura.cliente.id}">&laquo; Volver</a>
             </div>
 
             <h4 class="card-title text-success">Datos del cliente</h4>

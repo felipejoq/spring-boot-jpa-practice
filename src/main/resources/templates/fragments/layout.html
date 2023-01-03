@@ -35,11 +35,20 @@
                     </li>
                     <li sec:authorize="isAuthenticated() && hasRole('ROLE_ADMIN')" class="nav-item">
                         <a class="nav-link" th:href="@{/form}">Crear Clientes</a></li>
-                    <li sec:authorize="!isAuthenticated()" class="nav-item">
-                        <a class="nav-link" th:href="@{/login}">Login</a>
-                    </li>
                 </ul>
             </div>
+
+            <ul class="navbar-nav navbar-right mx-4">
+                <li sec:authorize="!isAuthenticated()" class="nav-item mx-1">
+                    <a class="btn btn-secondary btn-xs" th:href="@{/login}">Login</a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a th:href="@{/locale(lang=es_ES)}" class="btn btn-outline-success btn-xs">ES</a>
+                </li>
+                <li class="nav-item mx-1">
+                    <a th:href="@{/locale(lang=en_EN)}" class="btn btn-outline-success">EN</a>
+                </li>
+            </ul>
 
             <form sec:authorize="isAuthenticated()" class="form-inline" th:action="@{/logout}" method="post">
                 <button class="btn btn-secondary my-2 my-sm-0" type="submit">&#x2715 Salir</button>

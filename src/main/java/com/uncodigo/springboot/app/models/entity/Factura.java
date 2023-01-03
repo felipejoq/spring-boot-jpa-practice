@@ -1,5 +1,6 @@
 package com.uncodigo.springboot.app.models.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -36,6 +37,7 @@ public class Factura implements Serializable {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
     private Cliente cliente;
 
     public Long getId() {

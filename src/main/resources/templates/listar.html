@@ -14,16 +14,23 @@
 
         <div class="card-header" th:text="${titulo}"></div>
 
+        <div class="d-flex m-3">
+            <div class="ms-auto" sec:authorize="isAuthenticated()">
+                <a class="btn btn-success btn-sm" th:href="@{'/listar'(format=json)}" target="_blank">JSON</a>
+            </div>
+
+        </div>
+
         <div class="card-body">
 
             <table class="table table-striped">
                 <thead>
                 <tr>
                     <th sec:authorize="isAuthenticated()">Id</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Correo</th>
-                    <th>Fecha</th>
+                    <th th:text="#{text.cliente.nombre}">Nombre</th>
+                    <th th:text="#{text.cliente.apellido}">Apellido</th>
+                    <th th:text="#{text.cliente.email}">Correo</th>
+                    <th th:text="#{text.cliente.createAt}">Fecha</th>
                     <th sec:authorize="isAuthenticated() && hasRole('ROLE_ADMIN')">Factura</th>
                     <th sec:authorize="isAuthenticated() && hasRole('ROLE_ADMIN')">Editar</th>
                     <th sec:authorize="isAuthenticated() && hasRole('ROLE_ADMIN')">Eliminar</th>
